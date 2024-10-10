@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1",
+    "title": "台北的約會行程",
+    "description": "帶你遊台北的美好行程",
+    "author": "user123",
+    "location": "台北",
+    "date": "2024-09-15",
+    "rating": 4.5
+  },
+  {
+    "id": "2",
+    "title": "高雄的浪漫約會",
+    "description": "高雄夜市和港邊約會行程",
+    "author": "user456",
+    "location": "高雄",
+    "date": "2024-09-20",
+    "rating": 4.8
+  }
+]

@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Noto+Emoji:wght@300&family=Noto+Sans+TC:wght@300&family=Rubik:wght@300&display=swap');
+
+:root {
+  --primary-color: #93adcd;
+  --secondary-color: #7b7091;
+  --point-color-100: #e07f7c;
+  --point-color-200: #c84e52;
+  --point-color-300: #7f1d1f;
+  --point-color-400: #5a0f0f;
+  --bg-blur: blur(10px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Noto Emoji', 'Rubik', 'Noto Sans TC', sans-serif;
+  /* color: white;
+  a {
+    color: black;
+    display: block;
+    &:hover {
+      color: var(--point-color-100);
+      cursor: pointer;
+    }
+  }
+  i {
+    color: black;
+  } */
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  @keyframes gradient-flow {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .text-gradient-animated {
+    background: linear-gradient(270deg, #ad1e22, #ffb65c, #eb7d91);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gradient-flow 4s ease infinite;
+  }
+}
