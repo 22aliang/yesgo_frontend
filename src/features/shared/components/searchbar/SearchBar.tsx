@@ -1,22 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 interface SearchBarProps {
-  pathname?: string; // The page where the search should redirect (default: '/proposal')
-  className?: string; // Optional additional classNames for custom styling
+  pathname?: string;
+  className?: string;
+  value?: string;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
-  pathname = '/proposal', // Default redirect to the proposal page
-  className = '', // Additional custom styling can be passed here
+  pathname = '/proposal',
+  className = '',
+  value = '',
 }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const router = useRouter();
 
+  useEffect(() => {
+    setSearchTerm(value);
+  }, [value]);
+
   const handleSearch = () => {
     if (searchTerm.trim() !== '') {
       router.push({
-        pathname, // Use the provided pathname prop for redirect
+        pathname,
         query: { keyword: searchTerm },
       });
     }

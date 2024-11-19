@@ -1,8 +1,5 @@
 import { NextPageContext } from 'next';
-
-interface ErrorProps {
-  statusCode: number;
-}
+import { ErrorProps } from 'next/error';
 
 function Error({ statusCode }: ErrorProps) {
   return (

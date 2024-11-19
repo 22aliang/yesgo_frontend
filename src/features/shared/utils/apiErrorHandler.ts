@@ -4,7 +4,7 @@ export const handleApiError = (
 ): never => {
   console.log('API Error:', error);
 
-  let errorMessage = '操作失敗，請稍後再試。'; // Default message
+  let errorMessage = '操作失敗，請稍後再試。';
 
   if (typeof error === 'object' && error !== null && 'response' in error) {
     const axiosError = error as any;
@@ -22,7 +22,7 @@ export const handleApiError = (
   }
 
   if (showAlert) {
-    showAlert(errorMessage, 500); // 500 is a general server error
+    showAlert(errorMessage, 500);
   }
 
   throw new Error(errorMessage);

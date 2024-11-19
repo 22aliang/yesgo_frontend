@@ -1,6 +1,8 @@
-// next.config.mjs
 export default {
-  reactStrictMode: true,
+  reactStrictMode: false,
+  images: {
+    domains: ['drive.google.com', 'lh3.googleusercontent.com', 'randomuser.me'],
+  },
   webpack(config, { isServer }) {
     config.module.rules.push({
       test: /\.svg$/,

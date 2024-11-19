@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../../features/shared/components/layout/Layout';
 import { ReactElement } from 'react';
-import { useAuth } from '../../app/context/AuthContext';
-import { authService } from '../../features/user/services/authService'; // 使用你的 registerUser
+import { useDispatch, useSelector } from 'react-redux';
+import { register, login, setError } from '@/features/user/slice/authSlice';
+import { toast } from 'react-toastify';
+import { AppDispatch, RootState } from '@/api/store/store';
 
 const RegisterPage = () => {
   const [username, setUsername] = useState<string>('');
@@ -13,9 +15,9 @@ const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
-  const [error, setError] = useState<string>('');
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
-  const { login } = useAuth();
+  const { error } = useSelector((state: RootState) => state.auth);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,26 +25,24 @@ const RegisterPage = () => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
     if (password.length < 6) {
-      return setError('密碼長度必須至少為 6 個字元。');
+      return dispatch(setError('密碼長度必須至少為 6 個字元。'));
     }
 
     if (password !== confirmPassword) {
-      return setError('密碼不一致，請重新確認。');
+      return dispatch(setError('密碼不一致，請重新確認。'));
     }
 
     if (!emailRegex.test(email)) {
-      return setError('無效的 Email 格式，請輸入正確的 Email。');
+      return dispatch(setError('無效的 Email 格式，請輸入正確的 Email。'));
     }
 
     try {
-      await authService.registerUser(username, email, password);
-      setError('');
-      console.log(error);
-      login(email, password);
+      await dispatch(register({ username, email, password })).unwrap();
+      await dispatch(login({ email, password })).unwrap();
+      toast.success('Register successfully!');
       router.push('/user/setting');
-    } catch (error: unknown) {
+    } catch (error) {
       console.log(error);
-      setError(error instanceof Error ? error.message : String(error));
     }
   };
 
@@ -133,7 +133,7 @@ const RegisterPage = () => {
             </button>
           </div>
 
-          {error && <p className="bg-red-500 mb-4">{error}</p>}
+          {error && <p className="text-red-500 mb-4">{error}</p>}
           <button type="submit" className="w-full btn mt-2">
             註冊
           </button>

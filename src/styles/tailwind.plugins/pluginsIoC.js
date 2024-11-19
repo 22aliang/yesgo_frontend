@@ -5,7 +5,8 @@ import { images } from './images';
 import { allCenter } from './allCenters';
 import { dropdown } from './dropdown';
 import { selectSection } from './selectSection';
-import { alert } from './alert';
+import { tag } from './tag';
+import { modal } from './modal';
 
 const plugins = [
   btn,
@@ -15,7 +16,8 @@ const plugins = [
   allCenter,
   dropdown,
   selectSection,
-  alert,
+  tag,
+  modal,
 ];
 
 export default plugins;

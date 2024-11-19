@@ -1,60 +1,45 @@
-import api from '../../shared/services/apiService';
+import api from '@/features/shared/api/services/apiService';
+import { handleResponse } from '@/features/shared/utils/responseHandler';
+import { UserData } from '../types/UserData';
+import { UserAndToken } from '../types/LoginUser';
+import { userService } from './userService';
 
 export const authService = {
   async registerUser(username: string, email: string, password: string) {
-    try {
-      const response = await api.post('/auth/register', {
-        username,
-        email,
-        password,
-      });
-      localStorage.setItem('token', response.data.data.token);
-      return response.data.data;
-    } catch (error) {
-      console.log('auth service', error);
-      throw error;
-    }
+    const response = await api.post('/auth/register', {
+      username,
+      email,
+      password,
+    });
+    localStorage.setItem('token', response.data.data.token);
+    return handleResponse(response);
   },
 
-  async loginUser(email: string, password: string) {
-    try {
-      console.log('service str');
-      const response = await api.post('/auth/login', { email, password });
-      console.log('service fin', response);
-      localStorage.setItem('token', response.data.data.token);
-      return response.data.data;
-    } catch (error) {
-      console.log('auth service', error);
-      throw error;
-    }
+  async loginUser(email: string, password: string): Promise<UserAndToken> {
+    const response = await api.post('/auth/login', { email, password });
+    return handleResponse(response);
   },
 
   async logoutUser() {
-    try {
-      await api.post('/auth/logout');
-      localStorage.removeItem('token');
-    } catch (error) {
-      return new Error(String(error));
-    }
+    await api.post('/auth/logout');
   },
 
   async checkLoginStatus() {
-    try {
-      const response = await api.get('/auth/check-login');
-      return response.data.data;
-    } catch (error) {
-      return new Error(String(error));
+    let token = localStorage.getItem('token');
+    if (!token) {
+      const response = await api.post('/auth/refresh-token');
+      token = response.data.token;
+      localStorage.setItem('token', token);
     }
+
+    const userInfo = await userService.fetchUserInfos();
+    return userInfo;
   },
 
   async refreshToken() {
-    try {
-      const response = await api.post('/auth/refresh-token');
-      const newToken = response.data.data.token;
-      localStorage.setItem('token', newToken);
-      return newToken;
-    } catch (error) {
-      return new Error(String(error));
-    }
+    const response = await api.post('/auth/refresh-token');
+    const newToken = response.data.data.token;
+    localStorage.setItem('token', newToken);
+    return newToken;
   },
 };

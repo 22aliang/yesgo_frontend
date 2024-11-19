@@ -1,4 +1,3 @@
-// src/components/ForgotPasswordForm.tsx
 import React, { useState } from 'react';
 
 interface ForgotPasswordFormProps {
@@ -14,8 +13,6 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // 假設這是調用的發送重設密碼的API
-      // await authService.sendResetPasswordEmail(email);
       alert('重設密碼郵件已發送，請檢查您的信箱。');
       setError('');
       onBackToLogin();

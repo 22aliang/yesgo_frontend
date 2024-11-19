@@ -1,17 +1,20 @@
-import api from '../../shared/services/apiService';
+import api from '@/features/shared/api/services/apiService';
+import { handleResponse } from '@/features/shared/utils/responseHandler';
+import { UserAndToken } from '../types/LoginUser';
+
 export const userService = {
-  async updateUser(userId: number, username: string, newPassword: string) {
-    try {
-      const response = await api.put('/user/update', {
-        userId: userId,
-        userName: username,
-        newPassword: newPassword,
-      });
-      const token = response.data.data.token;
-      localStorage.setItem('token', token);
-      return response.data.data;
-    } catch (error) {
-      return new Error(String(error));
-    }
+  async updateUser(formData: FormData): Promise<UserAndToken> {
+    const response = await api.put('/user', formData);
+    return handleResponse(response);
+  },
+
+  async fetchUserInfos() {
+    const response = await api.get('/user');
+    return handleResponse(response);
+  },
+
+  async findByUserName(username: string) {
+    const response = await api.post('/friend/findUser', { username });
+    return handleResponse(response);
   },
 };

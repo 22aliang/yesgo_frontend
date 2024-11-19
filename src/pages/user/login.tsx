@@ -1,22 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../../features/shared/components/layout/Layout';
 import { ReactElement } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '../../app/context/AuthContext';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch } from '@/api/store/store';
+import { login } from '@/features/user/slice/authSlice';
 import ForgotPasswordForm from '../../features/user/components/ForgotPasswordForm';
+import { RootState } from '@/api/store/store';
 
 const LoginPage = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [isForgotPassword, setIsForgotPassword] = useState(false);
-  const [error, setError] = useState<string>('');
-  const { login } = useAuth();
+  const [isForgotPassword, setIsForgotPassword] = useState<boolean>(false);
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+  const { redirect } = router.query;
+  const { error, isLoggedIn } = useSelector((state: RootState) => state.auth);
 
-  const handleForgotPasswordClick = () => {
-    setIsForgotPassword(true);
-  };
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push('/user/setting');
+    }
+  }, [isLoggedIn, router]);
 
   const handleBackToLogin = () => {
     setIsForgotPassword(false);
@@ -25,12 +31,10 @@ const LoginPage = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await login(email, password);
-      setError('');
-      router.push('/user/setting');
-    } catch (error: unknown) {
+      await dispatch(login({ email, password })).unwrap();
+      router.push(redirect ? String(redirect) : '/user/setting');
+    } catch (error) {
       console.log('page', error);
-      setError(String(error));
     }
   };
 
@@ -87,13 +91,13 @@ const LoginPage = () => {
             </button>
 
             <div className="flex justify-between mt-8 text-sm font-medium">
-              <button
+              {/* <button
                 type="button"
                 className="cursor-pointer"
                 onClick={handleForgotPasswordClick}
               >
                 忘記密碼？
-              </button>
+              </button> */}
               <a className="cursor-pointer" href="/user/register">
                 註冊
               </a>
